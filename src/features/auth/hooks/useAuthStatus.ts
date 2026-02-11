@@ -1,0 +1,114 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import type {UserStatus} from "../../../types/user.types.ts";
+import {userApi} from "../../user/api/userApi.ts";
+
+export function useAuthStatus(
+    status: UserStatus | null,
+    email?: string | null
+) {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!status) {
+            navigate("/login", { replace: true });
+            return;
+        }
+
+        const pendingToken = sessionStorage.getItem("pendingVerificationToken");
+
+        const handleStatus = async () => {
+            switch (status) {
+                case "ACTIVE":
+                    sessionStorage.removeItem("pendingVerificationToken");
+                    localStorage.setItem("FAKE_AUTH", "true");
+                    navigate("/home", { replace: true });
+                    break;
+
+                case "PENDING":
+                    if (pendingToken && email) {
+                        console.log("🔄 Auto-verifying email...");
+
+                        try {
+                            await userApi.verifyEmail({ email, token: pendingToken });
+
+                            sessionStorage.removeItem("pendingVerificationToken");
+
+                            alert("✅ Email verified successfully! Logging you in...");
+                            window.location.href = "https://localhost:3000/v1/auth/zoho";
+
+                        } catch (error: any) {
+                            console.error("❌ Verification failed:", error);
+
+                            sessionStorage.removeItem("pendingVerificationToken");
+
+                            // Phân loại lỗi chi tiết
+                            let errorType = 'unknown';
+                            let errorMessage = "Verification failed. Please try again.";
+
+                            const responseMessage = error.response?.data?.message || '';
+
+                            if (responseMessage.includes('expired')) {
+                                errorType = 'expired';
+                                errorMessage = "⏰ Verification link has expired (24 hours limit). Please request a new one.";
+                            } else if (responseMessage.includes('Invalid') || responseMessage.includes('invalid')) {
+                                errorType = 'invalid';
+                                errorMessage = "🔗 Invalid verification link. Please check your email or request a new one.";
+                            } else if (responseMessage.includes('not found')) {
+                                errorType = 'notfound';
+                                errorMessage = "❓ User not found. Please contact support.";
+                            } else if (error.response?.status === 403) {
+                                errorType = 'forbidden';
+                                errorMessage = "🚫 Account is inactive. Please contact your administrator.";
+                            } else {
+                                errorMessage = responseMessage || error.message || "Verification failed.";
+                            }
+
+                            navigate("/inactive", {
+                                replace: true,
+                                state: {
+                                    email,
+                                    reason: "PENDING",
+                                    error: errorMessage,
+                                    errorType: errorType,
+                                },
+                            });
+                        }
+                    } else {
+                        navigate("/inactive", {
+                            replace: true,
+                            state: {
+                                email,
+                                reason: "PENDING",
+                            },
+                        });
+                    }
+                    break;
+
+                case "INACTIVE":
+                    sessionStorage.removeItem("pendingVerificationToken");
+                    navigate("/inactive", {
+                        replace: true,
+                        state: {
+                            email,
+                            reason: "INACTIVE",
+                        },
+                    });
+                    break;
+
+                case "NONE":
+                    sessionStorage.removeItem("pendingVerificationToken");
+                    navigate("/email-not-found", {
+                        replace: true,
+                        state: { email },
+                    });
+                    break;
+
+                default:
+                    navigate("/login", { replace: true });
+            }
+        };
+
+        handleStatus();
+    }, [status, email, navigate]);
+}
