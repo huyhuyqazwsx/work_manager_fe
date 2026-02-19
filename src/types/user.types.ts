@@ -1,13 +1,20 @@
 export type UserStatus = "ACTIVE" | "PENDING" | "INACTIVE" | "NONE";
 
-export type UserRole = "ADMIN" | "EMPLOYEE" | "MANAGER";
+export enum UserRole {
+    EMPLOYEE = 'EMPLOYEE',
+    DEPARTMENT_HEAD = 'DEPARTMENT_HEAD',
+    HR = 'HR',
+    BOD = 'BOD',
+}
 
 export interface UserAuth {
-    id: string;
-    email: string;
-    gender: string;
-    status: UserStatus;
-    role: UserRole;
-    createdAt?: string;
-    updatedAt?: string;
+    id: string,
+    email: string,
+    fullName: string,
+    gender: string,
+    status: UserStatus,
+    role: UserRole,
+    hireDate: Date,
+    createdAt?: Date,
+    updatedAt?: Date,
 }

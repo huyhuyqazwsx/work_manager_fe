@@ -1,7 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import type {UserStatus} from "../../../types/user.types.ts";
+import type {UserRole, UserStatus} from "../../../types/user.types.ts";
 import {userApi} from "../../user/api/userApi.ts";
+import {jwtDecode} from "jwt-decode";
+
+const ROLE_ROUTES: Record<UserRole, string> = {
+    EMPLOYEE: '/employee',
+    DEPARTMENT_HEAD: '/department-head',
+    HR: '/hr',
+    BOD: '/bod',
+};
 
 export function useAuthStatus(
     status: UserStatus | null,
@@ -21,8 +29,17 @@ export function useAuthStatus(
             switch (status) {
                 case "ACTIVE":
                     sessionStorage.removeItem("pendingVerificationToken");
-                    localStorage.setItem("FAKE_AUTH", "true");
-                    navigate("/home", { replace: true });
+
+                    try {
+                        const cookies = document.cookie.split(';');
+                        const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
+                        const token = tokenCookie?.split('=')[1];
+                        const decoded = jwtDecode<{ role: UserRole }>(token!);
+                        const route = ROLE_ROUTES[decoded.role] ?? '/home';
+                        navigate(route, { replace: true });
+                    } catch {
+                        navigate('/home', { replace: true }); // fallback
+                    }
                     break;
 
                 case "PENDING":

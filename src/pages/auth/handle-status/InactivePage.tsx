@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useResendInvite } from "../../features/user/hooks/useResendInvite";
+import { useResendInvite } from "../../../features/user/hooks/useResendInvite.ts";
 import "./inactive.css";
 
 export default function InactivePage() {
