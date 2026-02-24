@@ -6,7 +6,8 @@ import InactivePage from "../pages/auth/handle-status/InactivePage.tsx";
 import EmailNotFoundPage from "../pages/auth/handle-status/EmailNotFoundPage.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
 import { UserRole } from '../types/user.types';
-import HomePage from "../pages/home/HomePage.tsx";
+import HomePage from "../pages/employee/home/HomePage.tsx";
+import HRHomePage from "../pages/hr/HRHomePage.tsx";
 
 export default function AppRoutes() {
     return (
@@ -36,7 +37,7 @@ export default function AppRoutes() {
             {/* ========= HR ========= */}
             <Route path="/hr" element={
                 <ProtectedRoute allowedRoles={[UserRole.HR]}>
-                    <HomePage />
+                    <HRHomePage />
                 </ProtectedRoute>
             } />
 

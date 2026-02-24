@@ -76,4 +76,9 @@ export const userApi = {
         const response = await axiosInstance.post('/user/verify-email', data);
         return response.data;
     },
+
+    async getProfile(): Promise<UserAuth> {
+        const response = await axiosInstance.get('/user/profile');
+        return response.data;
+    },
 };

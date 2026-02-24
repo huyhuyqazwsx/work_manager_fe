@@ -7,16 +7,29 @@ interface JwtPayload {
     exp: number;
 }
 
-export function getRoleFromCookie(): UserRole | null {
+function decodeToken(): JwtPayload | null {
     const cookies = document.cookie.split(';');
     const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
     if (!tokenCookie) return null;
 
     try {
         const token = tokenCookie.split('=')[1];
-        const decoded = jwtDecode<JwtPayload>(token);
-        return decoded.role;
+        return jwtDecode<JwtPayload>(token);
     } catch {
         return null;
     }
+}
+
+export function getRoleFromCookie(): UserRole | null {
+    return decodeToken()?.role ?? null;
+}
+
+export function getUserIdFromCookie(): string | null {
+    return decodeToken()?.sub ?? null;
+}
+
+export function isTokenExpired(): boolean {
+    const decoded = decodeToken();
+    if (!decoded) return true;
+    return decoded.exp * 1000 < Date.now();
 }

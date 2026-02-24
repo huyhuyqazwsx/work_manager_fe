@@ -1,0 +1,229 @@
+.employee-directory {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* TABLE CARD */
+.table-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.loading-box {
+    padding: 32px;
+}
+
+/* TABLE */
+.employee-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.employee-table th,
+.employee-table td {
+    padding: 14px 18px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.employee-table thead {
+    background: #f9fafb;
+}
+
+.employee-table th {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.employee-table tbody tr {
+    border-top: 1px solid #f3f4f6;
+}
+
+.employee-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* EMPLOYEE CELL */
+.employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.employee-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #e5e7eb;
+}
+
+.employee-name {
+    font-weight: 500;
+}
+
+/* ID COLUMN */
+.col-id {
+    font-family: monospace;
+    font-size: 12px;
+    color: #6b7280;
+    word-break: break-all;
+}
+
+/* ROLE BADGE */
+.role-badge {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.role-badge.blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.role-badge.pink {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+.role-badge.purple {
+    background: #ede9fe;
+    color: #6b21a8;
+}
+
+.role-badge.orange {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+/* STATUS BADGE */
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+.status.active::before {
+    background: #16a34a;
+}
+
+.status.pending {
+    background: #fef9c3;
+    color: #92400e;
+}
+.status.pending::before {
+    background: #f59e0b;
+}
+
+.status.inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+.status.inactive::before {
+    background: #9ca3af;
+}
+
+/* PAGINATION */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination-btn {
+    min-width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+}
+
+.pagination-btn.active {
+    background: #3b82f6;
+    color: #fff;
+    border-color: #3b82f6;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.primary-btn {
+    padding: 10px 18px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.primary-btn:hover {
+    background: #2563eb;
+}
+
+.secondary-btn {
+    padding: 10px 18px;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.secondary-btn:hover {
+    background: #f9fafb;
+}
