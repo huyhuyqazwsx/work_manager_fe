@@ -11,6 +11,8 @@ const ROLE_ROUTES: Record<UserRole, string> = {
     BOD: '/bod',
 };
 
+const BE_URL = import.meta.env.VITE_BE_URL;
+
 export function useAuthStatus(
     status: UserStatus | null,
     email?: string | null
@@ -51,8 +53,7 @@ export function useAuthStatus(
 
                             sessionStorage.removeItem("pendingVerificationToken");
 
-                            alert("✅ Email verified successfully! Logging you in...");
-                            window.location.href = "https://localhost:3000/v1/auth/zoho";
+                            window.location.href = `${BE_URL}/auth/zoho`;
 
                         } catch (error: any) {
                             console.error("❌ Verification failed:", error);
