@@ -21,7 +21,9 @@ function decodeToken(): JwtPayload | null {
 }
 
 export function getRoleFromCookie(): UserRole | null {
-    return decodeToken()?.role ?? null;
+    const role = decodeToken()?.role ?? null;
+    console.log("[getRoleFromCookie] cookies =", document.cookie || "(empty)", "| role =", role);
+    return role;
 }
 
 export function getUserIdFromCookie(): string | null {

@@ -29,19 +29,26 @@ export function useAuthStatus(
         const pendingToken = sessionStorage.getItem("pendingVerificationToken");
 
         const handleStatus = async () => {
+            console.log("[useAuthStatus] status =", status);
             switch (status) {
                 case "ACTIVE":
                     sessionStorage.removeItem("pendingVerificationToken");
 
                     try {
-                        const cookies = document.cookie.split(';');
+                        const allCookies = document.cookie;
+                        console.log("[useAuthStatus] document.cookie =", allCookies || "(empty)");
+                        const cookies = allCookies.split(';');
                         const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
+                        console.log("[useAuthStatus] tokenCookie found =", !!tokenCookie);
                         const token = tokenCookie?.split('=')[1];
                         const decoded = jwtDecode<{ role: UserRole }>(token!);
+                        console.log("[useAuthStatus] decoded role =", decoded.role);
                         const route = ROLE_ROUTES[decoded.role] ?? '/home';
+                        console.log("[useAuthStatus] navigating to =", route);
                         navigate(route, { replace: true });
-                    } catch {
-                        navigate('/home', { replace: true }); // fallback
+                    } catch (err) {
+                        console.warn("[useAuthStatus] cookie decode failed, fallback /home. Error:", err);
+                        navigate('/home', { replace: true });
                     }
                     break;
 
