@@ -69,7 +69,11 @@ axiosInstance.interceptors.response.use(
             try {
                 const rtMatch = document.cookie.split(';').find(c => c.trim().startsWith('refreshToken='));
                 const refreshToken = rtMatch ? rtMatch.trim().slice('refreshToken='.length) : null;
-                const refreshRes = await axiosInstance.post('/auth/refresh', refreshToken ? { refreshToken } : undefined);
+                const refreshRes = await axiosInstance.post('/auth/refresh', undefined, {
+                    headers: {
+                        'x-refresh-token': refreshToken ?? ''
+                    }
+                });
                 const newToken = refreshRes.data?.accessToken;
                 if (newToken) {
                     document.cookie = `accessToken=${newToken}; path=/; max-age=86400; SameSite=Lax`;
