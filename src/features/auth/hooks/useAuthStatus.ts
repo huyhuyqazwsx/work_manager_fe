@@ -34,21 +34,14 @@ export function useAuthStatus(
                     sessionStorage.removeItem("pendingVerificationToken");
 
                     try {
-                        // Try cookie-based decode first (works in local dev)
                         const cookies = document.cookie.split(';');
                         const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
                         const token = tokenCookie?.split('=')[1];
-                        if (token) {
-                            const decoded = jwtDecode<{ role: UserRole }>(token);
-                            navigate(ROLE_ROUTES[decoded.role] ?? '/login', { replace: true });
-                            break;
-                        }
-                        // Fallback: cookie is HttpOnly or cross-domain → call API
-                        const profile = await userApi.getProfile();
-                        localStorage.setItem("profile", JSON.stringify(profile));
-                        navigate(ROLE_ROUTES[profile.role] ?? '/login', { replace: true });
+                        const decoded = jwtDecode<{ role: UserRole }>(token!);
+                        const route = ROLE_ROUTES[decoded.role] ?? '/home';
+                        navigate(route, { replace: true });
                     } catch {
-                        navigate('/login', { replace: true });
+                        navigate('/home', { replace: true }); // fallback
                     }
                     break;
 
