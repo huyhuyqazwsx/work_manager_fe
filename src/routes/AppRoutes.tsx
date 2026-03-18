@@ -1,13 +1,15 @@
 import LoginPage from "../pages/auth/handle-status/LoginPage.tsx";
-import {Navigate, Route, Routes} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import HandleStatusPage from "../pages/auth/handle-status/HandleStatusPage.tsx";
 import VerifyPage from "../pages/auth/handle-status/VerifyPage.tsx";
 import InactivePage from "../pages/auth/handle-status/InactivePage.tsx";
 import EmailNotFoundPage from "../pages/auth/handle-status/EmailNotFoundPage.tsx";
 import ProtectedRoute from "./ProtectedRoute.tsx";
-import { UserRole } from '../types/user.types';
 import HomePage from "../pages/employee/home/HomePage.tsx";
 import HRHomePage from "../pages/hr/HRHomePage.tsx";
+import DeptHeadHomePage from "../pages/department-head/DeptHeadHomePage.tsx";
+import BODHomePage from "../pages/bod/BODHomePage.tsx";
+import { UserRole } from "../types/enum/enum.ts";
 
 export default function AppRoutes() {
     return (
@@ -30,7 +32,7 @@ export default function AppRoutes() {
             {/* ========= DEPARTMENT HEAD ========= */}
             <Route path="/department-head" element={
                 <ProtectedRoute allowedRoles={[UserRole.DEPARTMENT_HEAD]}>
-                    <HomePage />
+                    <DeptHeadHomePage />
                 </ProtectedRoute>
             } />
 
@@ -42,9 +44,9 @@ export default function AppRoutes() {
             } />
 
             {/* ========= BOD ========= */}
-            <Route path="/bod" element={
+            <Route path="/bod/*" element={
                 <ProtectedRoute allowedRoles={[UserRole.BOD]}>
-                    <HomePage />
+                    <BODHomePage />
                 </ProtectedRoute>
             } />
 

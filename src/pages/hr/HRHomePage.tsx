@@ -8,8 +8,7 @@ import OTManagementPage from "./OTManagementPage";
 import EmployeeDirectory from "./EmployeeDirectory";
 import LeaveManagementPage from "./LeaveManagementPage";
 import ReportPage from "./ReportPage";
-
-import type { UserAuth } from "../../types/user.types";
+import type { UserResponse } from "../../types/user.types";
 import { getRoleFromCookie } from "../../utils/auth.utils";
 import { userApi } from "../../features/user/api/userApi";
 
@@ -19,7 +18,7 @@ export default function HRHomePage() {
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState<TabType>("employee");
-    const [profile, setProfile] = useState<UserAuth | null>(null);
+    const [profile, setProfile] = useState<UserResponse | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -72,7 +71,7 @@ export default function HRHomePage() {
             <main className="hr-main-content">
                 {activeTab === "employee" && <EmployeeDirectory />}
                 {activeTab === "leave" && <LeaveManagementPage />}
-                {activeTab === "ot" && <OTManagementPage />}
+                {activeTab === "ot" && <OTManagementPage userId={profile?.id ?? ""} />}
                 {activeTab === "report" && <ReportPage />}
             </main>
         </div>

@@ -1,5 +1,7 @@
+import { parseBackendError } from "../../../utils/error.utils";
 import { useState } from "react";
-import {type InviteUsersResult, userApi} from "../api/userApi.ts";
+import { userApi } from "../api/userApi.ts";
+import type { InviteUsersResult } from "../../../types/user.types";
 
 export function useInviteUsers() {
     const [loading, setLoading] = useState(false);
@@ -10,11 +12,11 @@ export function useInviteUsers() {
         try {
             setLoading(true);
             setError(null);
-            const response = await userApi.inviteUsers({ emails });
-            setResult(response.data);
+            const response = await userApi.invite({ emails });
+            setResult(response);
             return response;
         } catch (err: any) {
-            const errorMessage = err.response?.data?.message || err.message;
+            const errorMessage = parseBackendError(err, err.message);
             setError(errorMessage);
             throw err;
         } finally {

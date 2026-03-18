@@ -1,3 +1,4 @@
+import { parseBackendError } from "../../../utils/error.utils";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type {UserRole, UserStatus} from "../../../types/user.types.ts";
@@ -64,7 +65,7 @@ export function useAuthStatus(
                             let errorType = 'unknown';
                             let errorMessage = "Verification failed. Please try again.";
 
-                            const responseMessage = error.response?.data?.message || '';
+                            const responseMessage = parseBackendError(error, '');
 
                             if (responseMessage.includes('expired')) {
                                 errorType = 'expired';

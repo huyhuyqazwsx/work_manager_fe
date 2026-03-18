@@ -53,17 +53,21 @@ body {
     justify-content: space-between;
 }
 
-.hr-logout-inline {
+.hr-logout-btn {
     border: none;
     background: transparent;
     cursor: pointer;
-    font-size: 14px;
-    padding: 2px 6px;
+    color: var(--color-gray-400);
+    padding: 6px 8px;
     border-radius: 6px;
-    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
-.hr-logout-inline:hover {
+.hr-logout-btn:hover {
     background: #FEE2E2;
     color: #EF4444;
 }
@@ -356,7 +360,7 @@ body {
     background: white;
     border-radius: 16px;
     border: 1px solid var(--color-gray-200);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .table-wrapper {
@@ -545,5 +549,3 @@ body {
         gap: 16px;
     }
 }
-
-

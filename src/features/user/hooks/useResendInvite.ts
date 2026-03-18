@@ -1,3 +1,4 @@
+import { parseBackendError } from "../../../utils/error.utils";
 import { useState } from "react";
 import { userApi } from "../api/userApi.ts";
 
@@ -15,7 +16,7 @@ export function useResendInvite() {
             setMessage(response.message);
             return response;
         } catch (err: any) {
-            const errorMessage = err.response?.data?.message || err.message;
+            const errorMessage = parseBackendError(err, err.message);
             setError(errorMessage);
             throw err;
         } finally {

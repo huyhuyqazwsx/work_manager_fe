@@ -1,8 +1,9 @@
-export default function OTManagementPage() {
-    return (
-        <div className="hr-placeholder">
-            <h2>OT Management</h2>
-            <p>OT management content will be here</p>
-        </div>
-    );
+import EmployeeOTPage from "../employee/ot/OTPage";
+
+interface OTManagementPageProps {
+    userId: string;
+}
+
+export default function OTManagementPage({ userId }: OTManagementPageProps) {
+    return <EmployeeOTPage userId={userId} />;
 }

@@ -1,0 +1,851 @@
+.bod-settings-page {
+    padding: 32px;
+}
+
+.bod-settings-header .breadcrumb {
+    font-size: 13px;
+    color: var(--dh-gray-500);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bod-settings-header .breadcrumb .separator {
+    color: var(--dh-gray-400);
+}
+
+.bod-settings-header .breadcrumb .current {
+    color: var(--dh-gray-700);
+    font-weight: 500;
+}
+
+.bod-settings-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dh-gray-900);
+    letter-spacing: -0.02em;
+}
+
+.bod-settings-card {
+    margin-top: 20px;
+    background: white;
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 16px;
+    padding: 22px 24px;
+}
+
+.bod-settings-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.bod-settings-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #EAF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dh-primary);
+    flex-shrink: 0;
+}
+
+.bod-settings-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dh-gray-900);
+}
+
+.bod-settings-card-subtitle {
+    font-size: 13px;
+    color: var(--dh-gray-500);
+    margin-top: 2px;
+}
+
+.bod-stepper-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.bod-stepper {
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 84px;
+}
+
+.bod-stepper-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dh-gray-400);
+}
+
+.bod-stepper-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.bod-stepper-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+    min-width: 42px;
+    text-align: center;
+}
+
+.bod-stepper-unit {
+    font-size: 14px;
+    color: var(--dh-gray-500);
+}
+
+.bod-stepper-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bod-stepper-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    color: var(--dh-gray-700);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.bod-stepper-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+    border-color: var(--dh-gray-300);
+}
+
+.bod-stepper-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.bod-stepper-btn.primary {
+    background: #0F2A5F;
+    border-color: #0F2A5F;
+    color: white;
+}
+
+.bod-settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.bod-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.bod-btn.secondary {
+    background: white;
+    border: 1px solid var(--dh-gray-300);
+    color: var(--dh-gray-700);
+}
+
+.bod-btn.secondary:hover {
+    background: var(--dh-gray-50);
+}
+
+.bod-btn.primary {
+    background: #0F2A5F;
+    border: 1px solid #0F2A5F;
+    color: white;
+}
+
+.bod-btn.primary:hover:not(:disabled) {
+    filter: brightness(0.95);
+}
+
+.bod-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.bod-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bod-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dh-gray-700);
+}
+
+.bod-input,
+.bod-select {
+    padding: 10px 12px;
+    border: 1px solid var(--dh-gray-300);
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+    color: var(--dh-gray-900);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bod-input:focus,
+.bod-select:focus {
+    outline: none;
+    border-color: var(--dh-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.bod-muted {
+    font-size: 13px;
+    color: var(--dh-gray-500);
+    margin-top: 2px;
+}
+
+.bod-policy-card {
+    background: white;
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.bod-policy-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--dh-gray-200);
+}
+
+.bod-policy-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #EAF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dh-primary);
+}
+
+.bod-policy-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+}
+
+.bod-policy-section {
+    padding: 16px 18px;
+    border-top: 1px solid #F1F5F9;
+}
+
+.bod-policy-section:first-of-type {
+    border-top: none;
+}
+
+.bod-policy-subtitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dh-gray-800);
+    margin-bottom: 10px;
+}
+
+.bod-policy-subgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.bod-hint {
+    font-size: 12px;
+    color: var(--dh-gray-400);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Holiday settings */
+.bod-holiday-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+    align-items: start;
+}
+
+.bod-holiday-calendar {
+    background: white;
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 16px;
+    padding: 16px 16px 12px;
+}
+
+.bod-holiday-cal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bod-holiday-cal-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-cal-nav {
+    display: flex;
+    gap: 6px;
+}
+
+.bod-cal-nav-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dh-gray-700);
+}
+
+.bod-cal-nav-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+}
+
+.bod-cal-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bod-holiday-cal-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.bod-holiday-cal-dow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dh-gray-400);
+    padding: 6px 0;
+}
+
+.bod-holiday-cal-loading {
+    position: absolute;
+    inset: 38px 0 0 0;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dh-gray-600);
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 5;
+}
+
+.bod-holiday-cal-cell {
+    min-height: 72px;
+    padding: 6px 0 8px;
+    user-select: none;
+}
+
+.bod-holiday-cal-cell.empty {
+    cursor: default;
+}
+
+.bod-holiday-cal-cell.selecting {
+    cursor: pointer;
+}
+
+.bod-holiday-cal-cell.locked {
+    cursor: default;
+}
+
+.bod-holiday-cal-cell:hover:not(.empty).selecting {
+    background: var(--dh-gray-50);
+}
+
+.bod-holiday-cal-cell.empty:hover {
+    background: transparent;
+}
+
+.bod-holiday-cal-day {
+    display: flex;
+    justify-content: center;
+}
+
+.bod-holiday-cal-daynum {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.bod-holiday-cal-dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.bod-holiday-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.bod-holiday-cal-name {
+    text-align: center;
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #EF4444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 6px;
+}
+
+.bod-holiday-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--dh-gray-500);
+}
+
+.bod-holiday-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bod-holiday-side {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bod-holiday-panel {
+    background: white;
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 16px;
+    padding: 14px 14px 16px;
+}
+
+.bod-holiday-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bod-holiday-panel-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-add-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: none;
+    background: #0F2A5F;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.bod-holiday-add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-holiday-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bod-holiday-list-item {
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #F8FAFC;
+    cursor: pointer;
+}
+
+.bod-holiday-list-item:hover {
+    background: #EFF6FF;
+    border-color: #93C5FD;
+}
+
+.bod-holiday-list-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-list-sub {
+    font-size: 12px;
+    color: var(--dh-gray-500);
+    margin-top: 2px;
+}
+
+.bod-holiday-create-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--dh-gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bod-holiday-close-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-close-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-holiday-detail-list {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bod-holiday-detail-item {
+    border: 1px solid var(--dh-gray-200);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: white;
+}
+
+.bod-holiday-detail-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.bod-holiday-detail-row-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.bod-holiday-detail-name {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--dh-gray-900);
+}
+
+.bod-holiday-detail-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.bod-holiday-detail-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #BFDBFE;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.bod-holiday-detail-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bod-holiday-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.bod-mini-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    color: var(--dh-gray-800);
+}
+
+.bod-mini-btn.primary {
+    background: #0F2A5F;
+    border-color: #0F2A5F;
+    color: white;
+}
+
+.bod-mini-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-mini-icon-btn {
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    color: var(--dh-gray-800);
+}
+
+.bod-mini-icon-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+}
+
+.bod-mini-icon-btn.danger {
+    border-color: #FCA5A5;
+    color: #991B1B;
+    background: #FEF2F2;
+}
+
+.bod-mini-icon-btn.danger:hover:not(:disabled) {
+    background: #FEE2E2;
+}
+
+.bod-mini-icon-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-holiday-form {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bod-holiday-selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.bod-holiday-select-actions {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.bod-holiday-select-actions-row {
+    display: flex;
+    gap: 8px;
+}
+
+.bod-holiday-select-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--dh-gray-800);
+}
+
+.bod-holiday-select-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+}
+
+.bod-holiday-select-btn.done {
+    background: #0F2A5F;
+    border-color: #0F2A5F;
+    color: white;
+}
+
+.bod-holiday-select-btn.cancel {
+    background: white;
+}
+
+.bod-holiday-select-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-holiday-chip {
+    border: 1px solid var(--dh-gray-200);
+    background: #F8FAFC;
+    color: var(--dh-gray-800);
+    padding: 8px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.bod-holiday-chip:hover:not(:disabled) {
+    background: #EFF6FF;
+    border-color: #93C5FD;
+    color: #1D4ED8;
+}
+
+.bod-holiday-chip:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bod-holiday-chip-x {
+    margin-left: 6px;
+    font-weight: 900;
+    color: var(--dh-gray-400);
+}
+
+.bod-holiday-shifts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.bod-holiday-shift {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--dh-gray-200);
+    background: white;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--dh-gray-700);
+}
+
+.bod-holiday-shift.active {
+    border-color: #93C5FD;
+    background: #EFF6FF;
+    color: #1D4ED8;
+}
+
+.bod-holiday-apply-btn {
+    margin-top: 6px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: none;
+    background: #0F2A5F;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.bod-holiday-apply-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.bod-holiday-clear-btn {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    color: var(--dh-gray-400);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.bod-holiday-clear-btn:hover:not(:disabled) {
+    background: var(--dh-gray-50);
+    color: var(--dh-gray-700);
+}
+
+.bod-holiday-clear-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+    .bod-holiday-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .bod-policy-subgrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .bod-stepper-grid {
+        grid-template-columns: 1fr;
+    }
+    .bod-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

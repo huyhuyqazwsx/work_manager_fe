@@ -33,3 +33,13 @@ export function isTokenExpired(): boolean {
     if (!decoded) return true;
     return decoded.exp * 1000 < Date.now();
 }
+
+export function getUserFromStorage(): any | null {
+    try {
+        const userStr = localStorage.getItem('profile');
+        if (!userStr) return null;
+        return JSON.parse(userStr);
+    } catch {
+        return null;
+    }
+}

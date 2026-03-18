@@ -1,8 +1,27 @@
+import {type ContractType, UserRole} from "./enum/enum.ts";
+
 export interface InviteForm {
+    employeeCode?: string;
+
     email: string;
-    role: string;
-    hireDate: string;
-    departmentCode?: string;
+
+    department: string;
+
+    position?: string;
+
+    contractType: ContractType;
+
+    joinDate: string;
+
+    contractSignedDate?: string;
+
+    role: UserRole;
+}
+
+export interface InviteUsersResult {
+    PENDING: string[];
+    ACTIVE: string[];
+    INACTIVE: string[];
 }
 
 export interface InviteImportError {
@@ -19,9 +38,5 @@ export interface InviteImportResponse {
     failed: number;
     validData: InviteForm[];
     errors: InviteImportError[];
-    inviteResult?: {
-        PENDING: string[];
-        ACTIVE: string[];
-        INACTIVE: string[];
-    };
+    inviteResult?: InviteUsersResult;
 }

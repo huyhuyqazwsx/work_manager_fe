@@ -1,84 +1,80 @@
-import axiosInstance from "../../../utils/axiosConfig.ts";
-import type {UserAuth} from "../../../types/user.types.ts";
+import axiosInstance from "../../../utils/axiosConfig";
+import type { UserResponse, ResendInviteRequest, VerifyEmailRequest, UpdateUserPayload, InviteUsersRequest, InviteUsersResult, UserInDepartmentDto } from "../../../types/user.types";
 
-export interface InviteUsersRequest {
-    emails: string[];
-}
-
-export interface InviteUsersResult {
-    PENDING: string[];
-    ACTIVE: string[];
-    INACTIVE: string[];
-}
-
-export interface ResendInviteRequest {
-    email: string;
-}
-
-export interface VerifyEmailRequest {
-    email: string;
-    token: string;
-}
 
 export const userApi = {
-    // Get all users
-    async findAll(): Promise<UserAuth[]> {
-        const response = await axiosInstance.get('/user');
+
+    // GET /user
+    async findAll(): Promise<UserResponse[]> {
+        const response = await axiosInstance.get("/user");
         return response.data;
     },
 
-    // Get user by ID
-    async findById(id: string): Promise<UserAuth | null> {
+    // GET /user/count
+    async getCountCode(): Promise<any> {
+        const response = await axiosInstance.get("/user/count");
+        return response.data;
+    },
+
+    // GET /user/:id
+    async findById(id: string): Promise<UserResponse | null> {
         const response = await axiosInstance.get(`/user/${id}`);
         return response.data;
     },
 
-    // Get user by email
-    async findByEmail(email: string): Promise<UserAuth | null> {
+    // GET /user/email/:email
+    async findByEmail(email: string): Promise<UserResponse | null> {
         const response = await axiosInstance.get(`/user/email/${email}`);
         return response.data;
     },
 
-    // Update user
-    async update(id: string, user: Partial<UserAuth>): Promise<{ success: boolean }> {
+    // PUT /user/:id
+    async update(
+        id: string,
+        user: UpdateUserPayload
+    ): Promise<{ success: boolean }> {
         const response = await axiosInstance.put(`/user/${id}`, user);
         return response.data;
     },
 
-    // Delete user
+    // DELETE /user/:id
     async delete(id: string): Promise<void> {
         await axiosInstance.delete(`/user/${id}`);
     },
 
-    // Invite users
-    async inviteUsers(data: InviteUsersRequest): Promise<{
-        success: boolean;
-        data: InviteUsersResult;
-    }> {
-        const response = await axiosInstance.post('/user/invite', data);
+    // POST /user/invite
+    async invite(data: InviteUsersRequest): Promise<InviteUsersResult> {
+        const response = await axiosInstance.post("/user/invite", data);
         return response.data;
     },
 
-    // Resend invite
+    // POST /user/resend-invite
     async resendInvite(data: ResendInviteRequest): Promise<{
         success: boolean;
         message: string;
     }> {
-        const response = await axiosInstance.post('/user/resend-invite', data);
+        const response = await axiosInstance.post("/user/resend-invite", data);
         return response.data;
     },
 
-    // Verify email
+    // POST /user/verify-email
     async verifyEmail(data: VerifyEmailRequest): Promise<{
         success: boolean;
         message: string;
     }> {
-        const response = await axiosInstance.post('/user/verify-email', data);
+        const response = await axiosInstance.post("/user/verify-email", data);
         return response.data;
     },
 
-    async getProfile(): Promise<UserAuth> {
-        const response = await axiosInstance.get('/user/profile');
+    // GET /user/profile
+    async getProfile(): Promise<UserResponse> {
+        const response = await axiosInstance.get("/user/profile");
+        return response.data;
+    },
+
+    // GET /user/department/:managerId/users
+    async getUsersByUserOfDepartment(managerId: string): Promise<UserInDepartmentDto[]> {
+        const response = await axiosInstance.get(`/user/department/${managerId}/users`);
         return response.data;
     },
 };

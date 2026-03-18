@@ -1,10 +1,11 @@
+import { parseBackendError } from "../../../utils/error.utils";
 import { useState, useEffect } from "react";
 import { userApi } from "../api/userApi.ts";
-import type {UserAuth} from "../../../types/user.types.ts";
+import type { UserResponse } from "../../../types/user.types.ts";
 
 // Hook để lấy tất cả users
 export function useAllUsers() {
-    const [users, setUsers] = useState<UserAuth[]>([]);
+    const [users, setUsers] = useState<UserResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +16,7 @@ export function useAllUsers() {
             const data = await userApi.findAll();
             setUsers(data);
         } catch (err: any) {
-            setError(err.response?.data?.message || err.message);
+            setError(parseBackendError(err, err.message));
         } finally {
             setLoading(false);
         }
@@ -30,7 +31,7 @@ export function useAllUsers() {
 
 // Hook để lấy user by ID
 export function useUserById(id: string | null) {
-    const [user, setUser] = useState<UserAuth | null>(null);
+    const [user, setUser] = useState<UserResponse | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +44,7 @@ export function useUserById(id: string | null) {
             const data = await userApi.findById(id);
             setUser(data);
         } catch (err: any) {
-            setError(err.response?.data?.message || err.message);
+            setError(parseBackendError(err, err.message));
         } finally {
             setLoading(false);
         }
@@ -60,7 +61,7 @@ export function useUserById(id: string | null) {
 
 // Hook để lấy user by email
 export function useUserByEmail(email: string | null) {
-    const [user, setUser] = useState<UserAuth | null>(null);
+    const [user, setUser] = useState<UserResponse | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -73,7 +74,7 @@ export function useUserByEmail(email: string | null) {
             const data = await userApi.findByEmail(email);
             setUser(data);
         } catch (err: any) {
-            setError(err.response?.data?.message || err.message);
+            setError(parseBackendError(err, err.message));
         } finally {
             setLoading(false);
         }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRoleFromCookie } from "../../../utils/auth.utils";
 import { userApi } from "../../../features/user/api/userApi";
-import type { UserAuth } from "../../../types/user.types";
+import type { UserResponse } from "../../../types/user.types";
 import { useNavigate } from "react-router-dom";
 
 import "./home.css";
@@ -12,7 +12,7 @@ type TabType = "leave" | "ot";
 
 export default function HomePage() {
     const navigate = useNavigate();
-    const [profile, setProfile] = useState<UserAuth | null>(null);
+    const [profile, setProfile] = useState<UserResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<TabType>("leave");
 
@@ -26,7 +26,10 @@ export default function HomePage() {
 
         userApi
             .getProfile()
-            .then((data) => setProfile(data))
+            .then((data) => {
+                setProfile(data);
+                localStorage.setItem("profile", JSON.stringify(data));
+            })
             .catch(() => navigate("/login", { replace: true }))
             .finally(() => setLoading(false));
     }, [navigate]);
@@ -93,8 +96,8 @@ export default function HomePage() {
             </aside>
 
             <main className="main-content">
-                {activeTab === "leave" && <LeaveManagementPage />}
-                {activeTab === "ot" && <OTManagementPage />}
+                {activeTab === "leave" && <LeaveManagementPage userId={profile?.id ?? ""} />}
+                {activeTab === "ot" && <OTManagementPage userId={profile?.id ?? ""} />}
             </main>
         </div>
     );
