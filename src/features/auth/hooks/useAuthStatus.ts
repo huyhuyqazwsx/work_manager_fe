@@ -35,11 +35,18 @@ export function useAuthStatus(
                     sessionStorage.removeItem("pendingVerificationToken");
 
                     try {
-                        const allCookies = document.cookie;
-                        console.log("[useAuthStatus] document.cookie =", allCookies || "(empty)");
-                        const tokenCookie = allCookies.split(';').find(c => c.trim().startsWith('accessToken='));
-                        console.log("[useAuthStatus] tokenCookie found =", !!tokenCookie);
-                        const token = tokenCookie?.split('=')[1];
+                        // Try localStorage first (cross-domain production)
+                        let token = localStorage.getItem("accessToken");
+                        console.log("[useAuthStatus] localStorage accessToken =", token ? "found" : "(empty)");
+
+                        // Fallback: try cookie (same-domain / local dev)
+                        if (!token) {
+                            const allCookies = document.cookie;
+                            console.log("[useAuthStatus] document.cookie =", allCookies || "(empty)");
+                            const tokenCookie = allCookies.split(';').find(c => c.trim().startsWith('accessToken='));
+                            token = tokenCookie?.split('=')[1] ?? null;
+                        }
+
                         const decoded = jwtDecode<{ role: UserRole }>(token!);
                         console.log("[useAuthStatus] decoded role =", decoded.role);
                         navigate(ROLE_ROUTES[decoded.role] ?? '/login', { replace: true });

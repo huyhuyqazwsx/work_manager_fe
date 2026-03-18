@@ -8,13 +8,16 @@ interface JwtPayload {
 }
 
 function decodeToken(): JwtPayload | null {
-    const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
-    if (!tokenCookie) return null;
-
     try {
-        const token = tokenCookie.split('=')[1];
-        return jwtDecode<JwtPayload>(token);
+        // Try localStorage first (cross-domain production)
+        const lsToken = localStorage.getItem("accessToken");
+        if (lsToken) return jwtDecode<JwtPayload>(lsToken);
+
+        // Fallback: cookie (same-domain / local dev)
+        const cookies = document.cookie.split(';');
+        const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
+        if (!tokenCookie) return null;
+        return jwtDecode<JwtPayload>(tokenCookie.split('=')[1]);
     } catch {
         return null;
     }

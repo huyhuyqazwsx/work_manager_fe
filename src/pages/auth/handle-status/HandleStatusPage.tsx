@@ -12,14 +12,14 @@ export default function HandleStatusPage() {
     const accessToken = params.get("accessToken");
     const refreshToken = params.get("refreshToken");
 
-    // Store tokens from URL into cookies so the app can use them
+    // Store tokens from URL into localStorage for cross-domain auth
     useEffect(() => {
         if (accessToken) {
-            document.cookie = `accessToken=${accessToken}; path=/; max-age=86400; SameSite=Lax`;
-            console.log("[HandleStatusPage] accessToken saved to cookie");
+            localStorage.setItem("accessToken", accessToken);
+            console.log("[HandleStatusPage] accessToken saved to localStorage");
         }
         if (refreshToken) {
-            document.cookie = `refreshToken=${refreshToken}; path=/; max-age=604800; SameSite=Lax`;
+            localStorage.setItem("refreshToken", refreshToken);
         }
     }, [accessToken, refreshToken]);
 

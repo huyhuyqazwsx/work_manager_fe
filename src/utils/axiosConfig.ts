@@ -9,6 +9,15 @@ const axiosInstance = axios.create({
     },
 });
 
+// Attach token from localStorage (cross-domain) or rely on cookie (same-domain)
+axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+});
+
 let isRefreshing = false;
 let failedQueue: { resolve: (value?: unknown) => void; reject: (reason?: any) => void }[] = [];
 
@@ -54,14 +63,18 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                // Call refresh using the same instance (cookies with refreshToken will be sent automatically)
-                await axiosInstance.post('/auth/refresh');
-                
+                const refreshToken = localStorage.getItem("refreshToken");
+                const refreshRes = await axiosInstance.post('/auth/refresh', refreshToken ? { refreshToken } : undefined);
+                const newToken = refreshRes.data?.accessToken;
+                if (newToken) localStorage.setItem("accessToken", newToken);
+
                 processQueue(null);
                 return axiosInstance(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                localStorage.clear();
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("profile");
                 window.location.href = '/login';
                 return Promise.reject(err);
             } finally {
