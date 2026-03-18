@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { UserStatus } from "../../../types/user.types";
 import { useAuthStatus } from "../../../features/auth/hooks/useAuthStatus";
@@ -8,6 +9,19 @@ export default function HandleStatusPage() {
 
     const status = params.get("user_status") as UserStatus | null;
     const email = params.get("email");
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+
+    // Store tokens from URL into cookies so the app can use them
+    useEffect(() => {
+        if (accessToken) {
+            document.cookie = `accessToken=${accessToken}; path=/; max-age=86400; SameSite=Lax`;
+            console.log("[HandleStatusPage] accessToken saved to cookie");
+        }
+        if (refreshToken) {
+            document.cookie = `refreshToken=${refreshToken}; path=/; max-age=604800; SameSite=Lax`;
+        }
+    }, [accessToken, refreshToken]);
 
     useAuthStatus(status, email ?? undefined);
 

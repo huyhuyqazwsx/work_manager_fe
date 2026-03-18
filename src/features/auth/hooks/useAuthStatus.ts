@@ -35,24 +35,14 @@ export function useAuthStatus(
                     sessionStorage.removeItem("pendingVerificationToken");
 
                     try {
-                        // Try cookie decode first (works in same-domain / local dev)
                         const allCookies = document.cookie;
                         console.log("[useAuthStatus] document.cookie =", allCookies || "(empty)");
                         const tokenCookie = allCookies.split(';').find(c => c.trim().startsWith('accessToken='));
+                        console.log("[useAuthStatus] tokenCookie found =", !!tokenCookie);
                         const token = tokenCookie?.split('=')[1];
-                        if (token) {
-                            const decoded = jwtDecode<{ role: UserRole }>(token);
-                            console.log("[useAuthStatus] decoded role =", decoded.role);
-                            navigate(ROLE_ROUTES[decoded.role] ?? '/login', { replace: true });
-                            break;
-                        }
-
-                        // Cookie not readable (cross-domain / HttpOnly) → call API
-                        console.log("[useAuthStatus] cookie empty, calling getProfile()...");
-                        const profile = await userApi.getProfile();
-                        console.log("[useAuthStatus] profile.role =", profile.role);
-                        localStorage.setItem("profile", JSON.stringify(profile));
-                        navigate(ROLE_ROUTES[profile.role] ?? '/login', { replace: true });
+                        const decoded = jwtDecode<{ role: UserRole }>(token!);
+                        console.log("[useAuthStatus] decoded role =", decoded.role);
+                        navigate(ROLE_ROUTES[decoded.role] ?? '/login', { replace: true });
                     } catch (err) {
                         console.error("[useAuthStatus] ACTIVE handler failed:", err);
                         navigate('/login', { replace: true });
