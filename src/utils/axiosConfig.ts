@@ -14,7 +14,10 @@ axiosInstance.interceptors.request.use((config) => {
     const match = document.cookie.split(';').find(c => c.trim().startsWith('accessToken='));
     const token = match ? match.trim().slice('accessToken='.length) : null;
     if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
+        config.headers.set("Authorization", `Bearer ${token}`);
+        console.log("[axios] Authorization header set for:", config.url);
+    } else {
+        console.warn("[axios] No accessToken cookie found for:", config.url);
     }
     return config;
 });
