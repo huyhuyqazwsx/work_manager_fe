@@ -7,20 +7,27 @@ interface JwtPayload {
     exp: number;
 }
 
+function getTokenFromCookie(name: string): string | null {
+    const match = document.cookie.split(';').find(c => c.trim().startsWith(`${name}=`));
+    return match ? match.trim().slice(name.length + 1) : null;
+}
+
 function decodeToken(): JwtPayload | null {
     try {
-        // Try localStorage first (cross-domain production)
-        const lsToken = localStorage.getItem("accessToken");
-        if (lsToken) return jwtDecode<JwtPayload>(lsToken);
-
-        // Fallback: cookie (same-domain / local dev)
-        const cookies = document.cookie.split(';');
-        const tokenCookie = cookies.find(c => c.trim().startsWith('accessToken='));
-        if (!tokenCookie) return null;
-        return jwtDecode<JwtPayload>(tokenCookie.split('=')[1]);
+        const token = getTokenFromCookie("accessToken");
+        if (!token) return null;
+        return jwtDecode<JwtPayload>(token);
     } catch {
         return null;
     }
+}
+
+export function getAccessToken(): string | null {
+    return getTokenFromCookie("accessToken");
+}
+
+export function getRefreshToken(): string | null {
+    return getTokenFromCookie("refreshToken");
 }
 
 export function getRoleFromCookie(): UserRole | null {

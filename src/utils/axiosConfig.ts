@@ -9,9 +9,10 @@ const axiosInstance = axios.create({
     },
 });
 
-// Attach token from localStorage (cross-domain) or rely on cookie (same-domain)
+// Attach token from cookie as Authorization header (works cross-domain)
 axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken");
+    const match = document.cookie.split(';').find(c => c.trim().startsWith('accessToken='));
+    const token = match ? match.trim().slice('accessToken='.length) : null;
     if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -63,17 +64,20 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshToken = localStorage.getItem("refreshToken");
+                const rtMatch = document.cookie.split(';').find(c => c.trim().startsWith('refreshToken='));
+                const refreshToken = rtMatch ? rtMatch.trim().slice('refreshToken='.length) : null;
                 const refreshRes = await axiosInstance.post('/auth/refresh', refreshToken ? { refreshToken } : undefined);
                 const newToken = refreshRes.data?.accessToken;
-                if (newToken) localStorage.setItem("accessToken", newToken);
+                if (newToken) {
+                    document.cookie = `accessToken=${newToken}; path=/; max-age=86400; SameSite=Lax`;
+                }
 
                 processQueue(null);
                 return axiosInstance(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
+                document.cookie = 'accessToken=; path=/; max-age=0';
+                document.cookie = 'refreshToken=; path=/; max-age=0';
                 localStorage.removeItem("profile");
                 window.location.href = '/login';
                 return Promise.reject(err);
