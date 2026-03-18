@@ -14,14 +14,17 @@ export default function HandleStatusPage() {
 
     // Store tokens from URL into cookies (JS-accessible, FE domain)
     useEffect(() => {
+        console.log("[HandleStatusPage] accessToken from URL:", accessToken ?? "(null)");
+        console.log("[HandleStatusPage] refreshToken from URL:", refreshToken ?? "(null)");
         if (accessToken) {
             document.cookie = `accessToken=${accessToken}; path=/; max-age=86400; SameSite=Lax`;
-            console.log("[HandleStatusPage] accessToken saved to cookie");
+            console.log("[HandleStatusPage] accessToken saved to cookie ✓");
         }
         if (refreshToken) {
             document.cookie = `refreshToken=${refreshToken}; path=/; max-age=604800; SameSite=Lax`;
-            console.log("[HandleStatusPage] refreshToken saved to cookie");
+            console.log("[HandleStatusPage] refreshToken saved to cookie ✓");
         }
+        console.log("[HandleStatusPage] document.cookie after save:", document.cookie);
     }, [accessToken, refreshToken]);
 
     useAuthStatus(status, email ?? undefined);
