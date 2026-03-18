@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { otPlanApi } from "../../features/ot-plan/api/otPlanApi";
 import { otTicketApi } from "../../features/ot-ticket/api/otTicketApi";
 import type { OTPlan, OTTicket, CreateOTTicketItemDto } from "../../types/ot.types";
-import { OTPlanStatus, OTTicketStatus } from "../../types/enum/enum";
+import { OTPlanStatus } from "../../types/enum/enum";
 import { parseBackendError } from "../../utils/error.utils";
 
 interface Props {

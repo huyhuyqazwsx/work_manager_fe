@@ -13,7 +13,7 @@ interface SelectEmployeesModalProps {
     onAdd: (employees: Employee[]) => void;
 }
 
-export default function SelectEmployeesModal({ employees, loading, alreadySelected, onClose, onAdd }: SelectEmployeesModalProps) {
+export default function SelectEmployeesModal({ employees, loading, onClose, onAdd }: SelectEmployeesModalProps) {
     const [search, setSearch] = useState("");
     const [localSelected, setLocalSelected] = useState<string[]>([]);
 
