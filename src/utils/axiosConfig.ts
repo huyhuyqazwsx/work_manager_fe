@@ -86,7 +86,8 @@ axiosInstance.interceptors.response.use(
                 document.cookie = 'accessToken=; path=/; max-age=0';
                 document.cookie = 'refreshToken=; path=/; max-age=0';
                 localStorage.removeItem("profile");
-                window.location.href = '/login';
+                console.error("[axios] Refresh failed, staying on page to inspect error:", err);
+                // window.location.href = '/login';
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
