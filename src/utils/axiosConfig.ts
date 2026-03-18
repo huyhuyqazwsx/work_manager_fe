@@ -69,14 +69,23 @@ axiosInstance.interceptors.response.use(
             try {
                 const rtMatch = document.cookie.split(';').find(c => c.trim().startsWith('refreshToken='));
                 const refreshToken = rtMatch ? rtMatch.trim().slice('refreshToken='.length) : null;
+                console.log("[axios] Attempting token refresh, refreshToken found:", !!refreshToken);
+
                 const refreshRes = await axiosInstance.post('/auth/refresh', undefined, {
                     headers: {
                         'x-refresh-token': refreshToken ?? ''
                     }
                 });
-                const newToken = refreshRes.data?.accessToken;
-                if (newToken) {
-                    document.cookie = `accessToken=${newToken}; path=/; max-age=86400; SameSite=Lax`;
+
+                // BE trả về JSON { accessToken, refreshToken }
+                const newAccessToken = refreshRes.data?.accessToken;
+                const newRefreshToken = refreshRes.data?.refreshToken;
+                if (newAccessToken) {
+                    document.cookie = `accessToken=${newAccessToken}; path=/; max-age=86400; SameSite=Lax`;
+                    console.log("[axios] accessToken refreshed and saved to cookie");
+                }
+                if (newRefreshToken) {
+                    document.cookie = `refreshToken=${newRefreshToken}; path=/; max-age=604800; SameSite=Lax`;
                 }
 
                 processQueue(null);
@@ -86,8 +95,7 @@ axiosInstance.interceptors.response.use(
                 document.cookie = 'accessToken=; path=/; max-age=0';
                 document.cookie = 'refreshToken=; path=/; max-age=0';
                 localStorage.removeItem("profile");
-                console.error("[axios] Refresh failed, staying on page to inspect error:", err);
-                // window.location.href = '/login';
+                window.location.href = '/login';
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
