@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SelectEmployeesModal from "./SelectEmployeesModal";
 import DateRangeTimePicker from "./DateRangeTimePicker";
 import { otPlanApi } from "../../features/ot-plan/api/otPlanApi";
 import { userApi } from "../../features/user/api/userApi";
-import type { CreateOTPlanDto } from "../../types/ot.types";
+import type { CreateOTPlanDto, PreviewWarningItem } from "../../types/ot.types";
 import { parseBackendError } from "../../utils/error.utils";
 
 interface Employee {
@@ -25,6 +25,9 @@ export default function CreateOTPlanView({ userId, onCancel, onSubmitSuccess }: 
     const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
     const [loadingEmployees, setLoadingEmployees] = useState(true);
     const [errorMsg, setErrorMsg] = useState("");
+    const [warnings, setWarnings] = useState<PreviewWarningItem[]>([]);
+    const [previewing, setPreviewing] = useState(false);
+    const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         if (!userId) return;
@@ -38,6 +41,41 @@ export default function CreateOTPlanView({ userId, onCancel, onSubmitSuccess }: 
             .catch(console.error)
             .finally(() => setLoadingEmployees(false));
     }, [userId]);
+
+    // Debounced preview whenever tickets change
+    useEffect(() => {
+        const validTickets = selectedEmployees.filter(
+            e => e.startDate && e.endDate && e.startTime && e.endTime && e.code
+        );
+        if (validTickets.length === 0) { setWarnings([]); return; }
+
+        if (previewTimer.current) clearTimeout(previewTimer.current);
+        previewTimer.current = setTimeout(async () => {
+            const profile = JSON.parse(localStorage.getItem("profile") || "{}");
+            setPreviewing(true);
+            try {
+                const res = await otPlanApi.previewPlan({
+                    departmentId: profile.departmentId || "",
+                    managerId: userId,
+                    reason: reason || "preview",
+                    tickets: validTickets.map(e => ({
+                        employeeCode: e.code,
+                        startDate: e.startDate,
+                        endDate: e.endDate,
+                        startTime: e.startTime,
+                        endTime: e.endTime,
+                    })),
+                });
+                setWarnings(res.warnings ?? []);
+            } catch {
+                // silently ignore preview errors
+            } finally {
+                setPreviewing(false);
+            }
+        }, 800);
+
+        return () => { if (previewTimer.current) clearTimeout(previewTimer.current); };
+    }, [selectedEmployees, userId]);
 
     const handleAddEmployees = (employees: Employee[]) => {
         setSelectedEmployees(prev => [...prev, ...employees.map(e => ({
@@ -178,9 +216,20 @@ export default function CreateOTPlanView({ userId, onCancel, onSubmitSuccess }: 
                                         No employees selected yet. Click "Add Employee" to allocate resources.
                                     </td>
                                 </tr>
-                            ) : (
-                                selectedEmployees.map((emp, idx) => (
-                                    <tr key={idx} style={{ borderBottom: "1px solid var(--dh-gray-100)" }}>
+                            ) : (() => {
+                                // Build map: employeeCode → all warnings for that code
+                                const warnMap: Record<string, PreviewWarningItem[]> = {};
+                                warnings.forEach(w => {
+                                    if (!warnMap[w.employeeCode]) warnMap[w.employeeCode] = [];
+                                    warnMap[w.employeeCode].push(w);
+                                });
+
+                                return selectedEmployees.map((emp, idx) => {
+                                    const empWarnings = warnMap[emp.code] ?? [];
+                                    const hasWarn = empWarnings.length > 0;
+                                    return (
+                                <>
+                                <tr key={`row-${idx}`} style={{ borderBottom: hasWarn ? "none" : "1px solid var(--dh-gray-100)", background: hasWarn ? "#FFFDF0" : "white" }}>
                                         <td style={{ padding: "16px 24px", color: "var(--dh-gray-500)", fontSize: 13 }}>
                                             {String(idx + 1).padStart(2, '0')}
                                         </td>
@@ -259,8 +308,32 @@ export default function CreateOTPlanView({ userId, onCancel, onSubmitSuccess }: 
                                             </button>
                                         </td>
                                     </tr>
-                                ))
-                            )}
+
+                                    {/* Inline warning sub-row */}
+                                    {hasWarn && (
+                                        <tr key={`warn-${idx}`} style={{ borderBottom: "1px solid var(--dh-gray-100)", background: "#FFFBEB" }}>
+                                            <td />
+                                            <td colSpan={5} style={{ padding: "8px 24px 12px" }}>
+                                                {previewing ? (
+                                                    <span style={{ fontSize: 12, color: "#B45309" }}>Checking...</span>
+                                                ) : empWarnings.map((w, wi) => (
+                                                    <div key={wi} style={{ marginBottom: wi < empWarnings.length - 1 ? 6 : 0 }}>
+                                                        <span style={{ fontSize: 11, fontWeight: 700, color: "#92400E", marginRight: 6 }}>{w.date}</span>
+                                                        {w.warnings.map((msg, mi) => (
+                                                            <div key={mi} style={{ display: "flex", alignItems: "flex-start", gap: 5, fontSize: 12, color: "#B45309" }}>
+                                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5" style={{ flexShrink: 0, marginTop: 1 }}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                                                <span>{msg}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ))}
+                                            </td>
+                                        </tr>
+                                    )}
+                                </>
+                                    );
+                                });
+                            })()}
                         </tbody>
                     </table>
                 </div>
