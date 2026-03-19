@@ -1,4 +1,6 @@
 import axios from "axios";
+import { toast } from "../components/toast/toast";
+import { parseBackendError } from "./error.utils";
 const BE_URL = import.meta.env.VITE_BE_URL;
 
 const axiosInstance = axios.create({
@@ -103,10 +105,9 @@ axiosInstance.interceptors.response.use(
         }
 
         if (status === 403 && !isVerifyRequest) {
-            // Nếu là verify thì throw error để useAuthStatus xử lý
-            if (!isVerifyRequest) {
-                window.location.href = '/403';
-            }
+            // Forbidden: hiển thị toast lỗi, KHÔNG chuyển sang login
+            const message = parseBackendError(error, "Bạn không có quyền thực hiện thao tác này.");
+            toast.error(message);
         }
 
         return Promise.reject(error);
