@@ -30,7 +30,7 @@ export default function DeptHeadSidebar({ activeTab, setActiveTab, profile, onLo
                         <line x1="3" y1="10" x2="21" y2="10" />
                         <polyline points="9 16 11 18 15 14" />
                     </svg>
-                    Leave Approval
+                    Leave Management
                 </div>
 
                 {/* OT Approval */}
@@ -42,7 +42,7 @@ export default function DeptHeadSidebar({ activeTab, setActiveTab, profile, onLo
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
                     </svg>
-                    OT Approval
+                    OT Management
                 </div>
             </nav>
 

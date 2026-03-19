@@ -12,7 +12,7 @@ import type { UserResponse } from "../../types/user.types";
 import { getRoleFromCookie } from "../../utils/auth.utils";
 import { userApi } from "../../features/user/api/userApi";
 
-type TabType = "employee" | "leave" | "ot" | "report";
+type TabType = "employee" | "leave" | "ot" | "report_leave" | "report_ot";
 
 export default function HRHomePage() {
     const navigate = useNavigate();
@@ -72,7 +72,8 @@ export default function HRHomePage() {
                 {activeTab === "employee" && <EmployeeDirectory />}
                 {activeTab === "leave" && <LeaveManagementPage />}
                 {activeTab === "ot" && <OTManagementPage userId={profile?.id ?? ""} />}
-                {activeTab === "report" && <ReportPage />}
+                {activeTab === "report_leave" && <ReportPage section="leave" />}
+                {activeTab === "report_ot" && <ReportPage section="ot" userId={profile?.id ?? ""} />}
             </main>
         </div>
     );

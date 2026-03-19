@@ -8,6 +8,7 @@ import BODOTManagementPage from "./ot/BODOTManagementPage";
 import BODOTRulesPage from "./settings/BODOTRulesPage";
 import BODLeavePolicyPage from "./settings/BODLeavePolicyPage";
 import BODHolidayPage from "./settings/BODHolidayPage";
+import RoleManagementPage from "./roles/RoleManagementPage";
 
 import type { UserResponse } from "../../types/user.types";
 import { getRoleFromCookie } from "../../utils/auth.utils";
@@ -66,6 +67,8 @@ export default function BODHomePage() {
 
                     <Route path="leave" element={<LeaveApprovalPage isBOD={true} />} />
                     <Route path="ot" element={<BODOTManagementPage userId={profile?.id ?? ""} />} />
+
+                    <Route path="roles" element={<RoleManagementPage />} />
 
                     <Route path="settings" element={<Navigate to="ot-rules" replace />} />
                     <Route path="settings/ot-rules" element={<BODOTRulesPage />} />

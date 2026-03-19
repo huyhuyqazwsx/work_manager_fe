@@ -1,5 +1,6 @@
 import axiosInstance from "../../../utils/axiosConfig";
 import type { UserResponse, ResendInviteRequest, VerifyEmailRequest, UpdateUserPayload, InviteUsersRequest, InviteUsersResult, UserInDepartmentDto } from "../../../types/user.types";
+import type { UserRole } from "../../../types/enum/enum";
 
 
 export const userApi = {
@@ -76,5 +77,10 @@ export const userApi = {
     async getUsersByUserOfDepartment(managerId: string): Promise<UserInDepartmentDto[]> {
         const response = await axiosInstance.get(`/user/department/${managerId}/users`);
         return response.data;
+    },
+
+    // PATCH /user/change-role
+    async changeRole(userId: string, role: UserRole): Promise<void> {
+        await axiosInstance.patch(`/user/change-role`, { userId, role });
     },
 };

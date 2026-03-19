@@ -279,9 +279,9 @@ export default function EmployeeDirectory() {
                         <table className="employee-table">
                             <thead>
                                 <tr>
-                                    <th>CODE</th>
-                                    <th>EMPLOYEE</th>
-                                    <th>EMAIL</th>
+                                    <th style={{ width: 80 }}>CODE</th>
+                                    <th style={{ width: "20%" }}>EMPLOYEE</th>
+                                    <th style={{ width: "25%" }}>EMAIL</th>
                                     <th>DEPARTMENT</th>
                                     <th>ROLE</th>
                                     <th>STATUS</th>
@@ -296,7 +296,7 @@ export default function EmployeeDirectory() {
                                     return (
                                         <tr key={emp.id} className={isEditing ? "row-editing" : ""}>
                                             {/* CODE */}
-                                            <td>{emp.code ?? "—"}</td>
+                                            <td style={{ width: 80, whiteSpace: "nowrap" }}>{emp.code ?? "—"}</td>
 
                                             {/* EMPLOYEE NAME */}
                                             <td>

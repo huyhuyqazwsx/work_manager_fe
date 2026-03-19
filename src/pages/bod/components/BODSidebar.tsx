@@ -16,6 +16,7 @@ export default function BODSidebar({
     const isSettings = pathname.startsWith("/bod/settings");
     const isLeave = pathname === "/bod/leave" || pathname.startsWith("/bod/leave/");
     const isOt = pathname === "/bod/ot" || pathname.startsWith("/bod/ot/");
+    const isRoles = pathname === "/bod/roles" || pathname.startsWith("/bod/roles/");
     const activeSettingsTab =
         pathname.includes("/bod/settings/leave-policy") ? "leave" :
             pathname.includes("/bod/settings/holiday") ? "holiday" : "ot";
@@ -55,21 +56,28 @@ export default function BODSidebar({
                     OT Management
                 </div>
 
+                {/* Role Management */}
+                <div
+                    className={`dh-nav-item ${isRoles ? "active" : ""}`}
+                    onClick={() => navigate("/bod/roles")}
+                >
+                    <svg className="dh-nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    Role Management
+                </div>
+
                 {/* Settings */}
                 <div
                     className={`dh-nav-item ${isSettings ? "active" : ""}`}
                     onClick={() => navigate("/bod/settings/ot-rules")}
                 >
                     <svg className="dh-nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v1.18a2 2 0 0 0 .59 1.41L12 8.41a2 2 0 0 0 1.63-3.82V4a2 2 0 0 0-2-2z"></path>
-                        <path d="M7.78 6.41a2 2 0 0 0-3.66 0"></path>
-                        <path d="M3.59 12a2 2 0 0 0 0 3.66"></path>
-                        <path d="M6.41 19.78a2 2 0 0 0 3.66 0"></path>
-                        <path d="M12 21.59a2 2 0 0 0 3.66 0"></path>
-                        <path d="M19.78 17.59a2 2 0 0 0 0-3.66"></path>
-                        <path d="M21.59 12a2 2 0 0 0 0-3.66"></path>
-                        <path d="M17.59 6.41a2 2 0 0 0-3.66 0"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
                     Settings
                 </div>

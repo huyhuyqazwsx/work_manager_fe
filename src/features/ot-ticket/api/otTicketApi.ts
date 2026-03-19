@@ -50,5 +50,26 @@ export const otTicketApi = {
     async cancel(id: string): Promise<OTTicket> {
         const response = await axiosInstance.patch(`${API_BASE}/${id}/cancel`);
         return response.data;
-    }
+    },
+
+    // GET /ot-ticket/my-hours/day  → returns plain number
+    async getMyHoursByDay(): Promise<number> {
+        const date = new Date().toISOString().slice(0, 10);
+        const response = await axiosInstance.get(`${API_BASE}/my-hours/day`, { params: { date } });
+        return Number(response.data) || 0;
+    },
+
+    // GET /ot-ticket/my-hours/month  → returns plain number
+    async getMyHoursByMonth(): Promise<number> {
+        const date = new Date().toISOString().slice(0, 10);
+        const response = await axiosInstance.get(`${API_BASE}/my-hours/month`, { params: { date } });
+        return Number(response.data) || 0;
+    },
+
+    // GET /ot-ticket/my-hours/year  → returns plain number
+    async getMyHoursByYear(): Promise<number> {
+        const date = new Date().toISOString().slice(0, 10);
+        const response = await axiosInstance.get(`${API_BASE}/my-hours/year`, { params: { date } });
+        return Number(response.data) || 0;
+    },
 };

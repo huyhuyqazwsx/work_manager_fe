@@ -1,6 +1,7 @@
+import { useState } from "react";
 import type { UserResponse } from "../../../types/user.types";
 
-type TabType = "employee" | "leave" | "ot" | "report";
+type TabType = "employee" | "leave" | "ot" | "report_leave" | "report_ot";
 
 interface Props {
     activeTab: TabType;
@@ -15,6 +16,15 @@ export default function HRSidebar({
     profile,
     onLogout,
 }: Props) {
+    const isReportActive = activeTab === "report_leave" || activeTab === "report_ot";
+    const [reportOpen, setReportOpen] = useState(isReportActive);
+
+    const handleReportClick = () => {
+        const next = !reportOpen;
+        setReportOpen(next);
+        if (next && !isReportActive) setActiveTab("report_leave");
+    };
+
     return (
         <aside className="hr-sidebar">
             <div className="hr-sidebar-header">
@@ -44,12 +54,41 @@ export default function HRSidebar({
                     OT Management
                 </div>
 
+                {/* Report expandable */}
                 <div
-                    className={`hr-nav-item ${activeTab === "report" ? "active" : ""}`}
-                    onClick={() => setActiveTab("report")}
+                    className={`hr-nav-item ${isReportActive ? "active" : ""}`}
+                    onClick={handleReportClick}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
-                    Report
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <svg className="hr-nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Report
+                    </div>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                        style={{ transition: "transform 0.2s", transform: reportOpen ? "rotate(180deg)" : "rotate(0deg)" }}>
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
                 </div>
+                {reportOpen && (
+                    <>
+                        <div
+                            className={`hr-nav-subitem ${activeTab === "report_leave" ? "active" : ""}`}
+                            onClick={() => setActiveTab("report_leave")}
+                        >
+                            Leave Management
+                        </div>
+                        <div
+                            className={`hr-nav-subitem ${activeTab === "report_ot" ? "active" : ""}`}
+                            onClick={() => setActiveTab("report_ot")}
+                        >
+                            OT Management
+                        </div>
+                    </>
+                )}
 
             </nav>
 

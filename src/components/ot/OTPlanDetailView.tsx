@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { otPlanApi } from "../../features/ot-plan/api/otPlanApi";
 import { otTicketApi } from "../../features/ot-ticket/api/otTicketApi";
 import type { OTPlan, OTTicket, CreateOTTicketItemDto } from "../../types/ot.types";
-import { OTPlanStatus } from "../../types/enum/enum";
+import { OTPlanStatus, OTTicketStatus } from "../../types/enum/enum";
 import { parseBackendError } from "../../utils/error.utils";
+import { toast } from "../toast/toast";
 
 interface Props {
     planId: string;
     userId: string;
     employeeMap?: Record<string, string>; // code → fullName (for ticketPayload)
     userIdMap?: Record<string, string>;   // userId → fullName (for actual tickets)
+    readOnly?: boolean;                   // HR view — hide approve/reject ticket actions
     onBack: () => void;
     onRefresh?: () => void;
 }
@@ -76,12 +78,15 @@ const tdStyle: React.CSSProperties = {
     padding: "14px 16px", fontSize: 13, color: "#0F172A", borderBottom: "1px solid var(--dh-gray-100)", verticalAlign: "middle",
 };
 
-export default function OTPlanDetailView({ planId, userId, employeeMap = {}, userIdMap = {}, onBack, onRefresh }: Props) {
+export default function OTPlanDetailView({ planId, userId, employeeMap = {}, userIdMap = {}, readOnly = false, onBack, onRefresh }: Props) {
     const [plan, setPlan] = useState<OTPlan | null>(null);
     const [tickets, setTickets] = useState<OTTicket[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [ticketActionLoading, setTicketActionLoading] = useState<string | null>(null);
+    const [rejectTicketId, setRejectTicketId] = useState<string | null>(null);
+    const [rejectNote, setRejectNote] = useState("");
 
     const fetchPlan = async () => {
         setLoading(true);
@@ -116,6 +121,36 @@ export default function OTPlanDetailView({ planId, userId, employeeMap = {}, use
             setErrorMsg(parseBackendError(err, `Failed to ${action} plan`));
         } finally {
             setActionLoading(false);
+        }
+    };
+
+    const handleVerifyTicket = async (ticketId: string) => {
+        setTicketActionLoading(ticketId);
+        try {
+            await otTicketApi.verify(ticketId);
+            setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: OTTicketStatus.VERIFIED } : t));
+            toast.success("Ticket đã được duyệt.");
+        } catch (err: any) {
+            toast.error(parseBackendError(err, "Duyệt ticket thất bại."));
+        } finally {
+            setTicketActionLoading(null);
+        }
+    };
+
+    const handleRejectTicketConfirm = async () => {
+        if (!rejectTicketId) return;
+        if (!rejectNote.trim()) { toast.error("Vui lòng nhập lý do từ chối."); return; }
+        setTicketActionLoading(rejectTicketId);
+        try {
+            await otTicketApi.reject(rejectTicketId, rejectNote.trim());
+            setTickets(prev => prev.map(t => t.id === rejectTicketId ? { ...t, status: OTTicketStatus.REJECTED } : t));
+            toast.success("Ticket đã bị từ chối.");
+            setRejectTicketId(null);
+            setRejectNote("");
+        } catch (err: any) {
+            toast.error(parseBackendError(err, "Từ chối ticket thất bại."));
+        } finally {
+            setTicketActionLoading(null);
         }
     };
 
@@ -258,11 +293,12 @@ export default function OTPlanDetailView({ planId, userId, employeeMap = {}, use
                                     <th style={{ ...thStyle, textAlign: "center" }}>Check-out</th>
                                     <th style={{ ...thStyle, textAlign: "center" }}>Duration</th>
                                     <th style={{ ...thStyle, textAlign: "center" }}>Status</th>
+                                    <th style={{ ...thStyle, textAlign: "center" }}>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {tickets.length === 0 ? (
-                                    <tr><td colSpan={12} style={{ ...tdStyle, textAlign: "center", color: "var(--dh-gray-400)", padding: 32 }}>No tickets yet.</td></tr>
+                                    <tr><td colSpan={13} style={{ ...tdStyle, textAlign: "center", color: "var(--dh-gray-400)", padding: 32 }}>No tickets yet.</td></tr>
                                 ) : tickets.map((t, idx) => {
                                     const empName = userIdMap[t.userId];
                                     return (
@@ -309,11 +345,62 @@ export default function OTPlanDetailView({ planId, userId, employeeMap = {}, use
                                         <td style={{ ...tdStyle, textAlign: "center" }}>
                                             {ticketStatusBadge(t.status)}
                                         </td>
+                                        <td style={{ ...tdStyle, textAlign: "center" }}>
+                                            {!readOnly && t.status === OTTicketStatus.COMPLETED && (
+                                                <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+                                                    <button
+                                                        onClick={() => handleVerifyTicket(t.id)}
+                                                        disabled={ticketActionLoading === t.id}
+                                                        style={{ padding: "4px 12px", borderRadius: 6, border: "none", background: "#D1FAE5", color: "#065F46", fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: ticketActionLoading === t.id ? 0.6 : 1 }}
+                                                    >
+                                                        Approve
+                                                    </button>
+                                                    <button
+                                                        onClick={() => { setRejectTicketId(t.id); setRejectNote(""); }}
+                                                        disabled={ticketActionLoading === t.id}
+                                                        style={{ padding: "4px 12px", borderRadius: 6, border: "none", background: "#FEE2E2", color: "#991B1B", fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: ticketActionLoading === t.id ? 0.6 : 1 }}
+                                                    >
+                                                        Reject
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </td>
                                     </tr>
                                     );
                                 })}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+
+            {/* Reject ticket modal */}
+            {rejectTicketId && (
+                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ background: "white", borderRadius: 16, padding: "28px 32px", width: 420, boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+                        <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#0F172A" }}>Từ chối ticket</div>
+                        <textarea
+                            value={rejectNote}
+                            onChange={e => setRejectNote(e.target.value)}
+                            placeholder="Nhập lý do từ chối..."
+                            rows={4}
+                            style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1.5px solid var(--dh-gray-200)", fontSize: 13, resize: "vertical", boxSizing: "border-box" }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 16 }}>
+                            <button
+                                onClick={() => { setRejectTicketId(null); setRejectNote(""); }}
+                                style={{ padding: "9px 20px", borderRadius: 8, border: "1.5px solid var(--dh-gray-300)", background: "white", color: "var(--dh-gray-700)", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+                            >
+                                Hủy
+                            </button>
+                            <button
+                                onClick={handleRejectTicketConfirm}
+                                disabled={!!ticketActionLoading}
+                                style={{ padding: "9px 20px", borderRadius: 8, border: "none", background: "#EF4444", color: "white", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+                            >
+                                {ticketActionLoading ? "Đang xử lý..." : "Xác nhận từ chối"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

@@ -18,6 +18,8 @@ export default function PersonalOTView({ userId }: PersonalOTViewProps) {
     const [tickets, setTickets] = useState<OTTicket[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null); // ticketId
+    const [hoursThisMonth, setHoursThisMonth] = useState<number | null>(null);
+    const [hoursThisYear, setHoursThisYear] = useState<number | null>(null);
 
     const [checkInTarget, setCheckInTarget] = useState<OTTicket | null>(null);
     const [checkOutTarget, setCheckOutTarget] = useState<OTTicket | null>(null);
@@ -38,6 +40,14 @@ export default function PersonalOTView({ userId }: PersonalOTViewProps) {
                 // Fetch My Tickets
                 const myTickets = await otTicketApi.getMyTickets();
                 setTickets(myTickets);
+
+                // Fetch OT hours stats
+                const [monthRes, yearRes] = await Promise.all([
+                    otTicketApi.getMyHoursByMonth(),
+                    otTicketApi.getMyHoursByYear(),
+                ]);
+                setHoursThisMonth(monthRes);
+                setHoursThisYear(yearRes);
             } catch (err) {
                 console.error("Failed to load OT data", err);
             } finally {
@@ -48,17 +58,9 @@ export default function PersonalOTView({ userId }: PersonalOTViewProps) {
         void fetchData();
     }, [userId]);
 
-    // Calculate OT hours this month
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-
-    const otHoursThisMonth = tickets
-        .filter(t => {
-            const d = new Date(t.workDate);
-            return d.getMonth() === currentMonth && d.getFullYear() === currentYear && t.actualHours;
-        })
-        .reduce((sum, t) => sum + (t.actualHours || 0), 0);
 
     const compHours = balance?.hours ?? 0;
     const isDeficit = compHours < 0;
@@ -161,11 +163,6 @@ export default function PersonalOTView({ userId }: PersonalOTViewProps) {
 
     return (
         <div style={{ marginTop: 24 }}>
-            {/* Header */}
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", marginBottom: 20 }}>
-                My OT Schedule
-            </h2>
-
             {/* Dashboard Cards */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
                 {/* Compensatory Fund Card */}
@@ -199,9 +196,28 @@ export default function PersonalOTView({ userId }: PersonalOTViewProps) {
                         OT Hours This Month
                     </div>
                     <div style={{ fontSize: 32, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.02em" }}>
-                        {otHoursThisMonth.toFixed(1)} Hours
+                        {hoursThisMonth !== null ? `${hoursThisMonth.toFixed(1)} Hours` : "—"}
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--dh-gray-400)", marginTop: 4 }}>
+                        Tháng {String(currentMonth + 1).padStart(2, "0")}/{currentYear}
                     </div>
                     <span style={{ position: "absolute", top: 24, right: 24, fontSize: 24, background: "#EFF6FF", color: "#3B82F6", width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+                        🕒
+                    </span>
+                </div>
+
+                {/* OT Hours This Year */}
+                <div style={{ background: "white", borderRadius: 16, border: "1px solid var(--dh-gray-200)", padding: 24, position: "relative" }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--dh-gray-500)", marginBottom: 12 }}>
+                        OT Hours This Year
+                    </div>
+                    <div style={{ fontSize: 32, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.02em" }}>
+                        {hoursThisYear !== null ? `${hoursThisYear.toFixed(1)} Hours` : "—"}
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--dh-gray-400)", marginTop: 4 }}>
+                        Năm {currentYear}
+                    </div>
+                    <span style={{ position: "absolute", top: 24, right: 24, fontSize: 24, background: "#F0FDF4", color: "#16A34A", width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
                         🕒
                     </span>
                 </div>
